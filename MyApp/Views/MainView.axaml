@@ -11,7 +11,7 @@
              x:DataType="vm:MainViewModel">
 
   <UserControl.Resources>
-    <!-- Конвертер для центрирования текста внутри фигуры -->
+    <!-- Конвертер для центрирования текста -->
     <local:CenterOffsetConverter x:Key="CenterOffsetConverter" />
   </UserControl.Resources>
 
@@ -49,7 +49,7 @@
                    Command="{Binding ChangeColorCommand}" CommandParameter="Blue"/>
     </StackPanel>
 
-    <!-- Нижняя строка с ползунками -->
+    <!-- Блок с ползунками -->
     <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="10" Margin="50,50,0,50">
       <!-- Вертикальный ползунок -->
       <Slider Minimum="50" Maximum="300" Value="{Binding Height}"

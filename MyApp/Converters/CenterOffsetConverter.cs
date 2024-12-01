@@ -10,7 +10,6 @@ namespace MyApp.Converters
         {
             if (value is double doubleValue)
             {
-                // Центрируем контейнер внутри фигуры
                 return doubleValue / 2;
             }
             return 0;

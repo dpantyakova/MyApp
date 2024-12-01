@@ -16,8 +16,8 @@ namespace MyApp.ViewModels
 
         private double _width = 150;
         private double _height = 100;
-        private IBrush _ellipseColor = Brushes.Green; // Начальный цвет эллипса
-        private IBrush _rectangleColor = Brushes.Green; // Начальный цвет прямоугольника
+        private IBrush _ellipseColor = Brushes.Green; 
+        private IBrush _rectangleColor = Brushes.Green; 
 
         private bool _isEllipseVisible = false;
         private bool _isRectangleVisible = false;
@@ -184,7 +184,7 @@ namespace MyApp.ViewModels
         {
             IsRectangleVisible = true;
             IsEllipseVisible = false;
-            RectangleColor = Brushes.Green; // Цвет для прямоугольника при отображении
+            RectangleColor = Brushes.Green; 
             RectangleTextColor = Brushes.White;
             EllipseColor = Brushes.Transparent;
         }

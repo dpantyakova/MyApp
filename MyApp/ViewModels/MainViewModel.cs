@@ -1,42 +1,75 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Avalonia.Media;
+using System.Windows.Input;
 
 namespace MyApp.ViewModels
 {
-    public partial class MainViewModel : ViewModelBase
+    public partial class MainViewModel : ObservableObject
     {
-        // Проперти для ширины и высоты эллипса
+        // Проперти для эллипса и прямоугольника
         [ObservableProperty]
-        private double _ellipseWidth = 150;  // Начальная ширина эллипса
+        private double width = 150; // Общее свойство для ширины
 
         [ObservableProperty]
-        private double _ellipseHeight = 150; // Начальная высота эллипса
+        private double height = 150; // Общее свойство для высоты
 
-        // Проперти для цвета эллипса
         [ObservableProperty]
-        private IBrush _ellipseColor = Brushes.Green; // Начальный цвет эллипса
+        private IBrush ellipseColor = Brushes.Green;
 
-        // Метод для изменения цвета эллипса
-        public void ChangeEllipseColor(string color)
+        [ObservableProperty]
+        private IBrush rectangleColor = Brushes.Green;
+
+        // Видимость фигур
+        [ObservableProperty]
+        private bool isEllipseVisible = true;
+
+        [ObservableProperty]
+        private bool isRectangleVisible = false;
+
+        // Команда для отображения эллипса
+        public ICommand ShowEllipseCommand => new RelayCommand(() =>
         {
-            switch (color)
-            {
-                case "Green":
-                    EllipseColor = Brushes.Green;
-                    break;
-                case "Red":
-                    EllipseColor = Brushes.Red;
-                    break;
-                case "Blue":
-                    EllipseColor = Brushes.Blue;
-                    break;
-                default:
-                    EllipseColor = Brushes.Green; // по умолчанию
-                    break;
-            }
-        }
+            // Установка значений ширины и высоты для эллипса
+            Width = 150;
+            Height = 150;
+            EllipseColor = Brushes.Green;
 
-        // Свойство для вывода текущего размера эллипса
-        public string EllipseDimensions => $"Ширина:{EllipseWidth} x Высота{EllipseHeight}"; // Выводит Ширина: {ширина} Длина: {длина}
+            IsEllipseVisible = true;
+            IsRectangleVisible = false;
+        });
+
+        // Команда для отображения прямоугольника
+        public ICommand ShowRectangleCommand => new RelayCommand(() =>
+        {
+            // Установка значений ширины и высоты для прямоугольника
+            Width = 150;
+            Height = 150;
+            RectangleColor = Brushes.Green;
+
+            IsEllipseVisible = false;
+            IsRectangleVisible = true;
+        });
+
+        // Команда для изменения цвета активной фигуры
+        public ICommand ChangeColorCommand => new RelayCommand<string>((color) =>
+        {
+            var newColor = color switch
+            {
+                "Green" => Brushes.Green,
+                "Red" => Brushes.Red,
+                "Blue" => Brushes.Blue,
+                _ => Brushes.Green
+            };
+
+            if (IsEllipseVisible)
+            {
+                EllipseColor = newColor;
+            }
+            else if (IsRectangleVisible)
+            {
+                RectangleColor = newColor;
+            }
+        });
     }
 }

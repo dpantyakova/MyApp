@@ -2,12 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:MyApp.ViewModels"
+             xmlns:vm="clr-namespace:MyApp.ViewModels;assembly=MyApp"
+             xmlns:local="clr-namespace:MyApp.Converters;assembly=MyApp"
              mc:Ignorable="d"
-             d:DesignWidth="800"
-             d:DesignHeight="450"
+             d:DesignWidth="1400"
+             d:DesignHeight="800"
              x:Class="MyApp.Views.MainView"
              x:DataType="vm:MainViewModel">
+
+  <UserControl.Resources>
+    <!-- Конвертер для центрирования текста внутри фигуры -->
+    <local:CenterOffsetConverter x:Key="CenterOffsetConverter" />
+  </UserControl.Resources>
 
   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid.RowDefinitions>
@@ -43,25 +49,41 @@
                    Command="{Binding ChangeColorCommand}" CommandParameter="Blue"/>
     </StackPanel>
 
-    <!-- Фигура -->
-    <Grid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
-      <Ellipse Width="{Binding Width}" Height="{Binding Height}"
-               Fill="{Binding EllipseColor}" IsVisible="{Binding IsEllipseVisible}" />
-      <Rectangle Width="{Binding Width}" Height="{Binding Height}"
-                 Fill="{Binding RectangleColor}" IsVisible="{Binding IsRectangleVisible}" />
-      <!-- Вертикальный ползунок для изменения высоты эллипса, расположен слева от эллипса -->
-      <Slider Grid.Row="2" Minimum="50" Maximum="300" Value="{Binding Height}"
-              Orientation="Vertical" Width="50" Height="220" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-150,0,40,0"
-              TickFrequency="1" IsSnapToTickEnabled="True"/>
-    </Grid>
-
     <!-- Нижняя строка с ползунками -->
-    <StackPanel Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+    <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Vertical" Spacing="10" Margin="50,50,0,50">
+      <!-- Вертикальный ползунок -->
+      <Slider Minimum="50" Maximum="300" Value="{Binding Height}"
+              Orientation="Vertical" Width="50" Height="300" Margin="0,0,400,0"
+              TickFrequency="1" IsSnapToTickEnabled="True"/>
+      <!-- Горизонтальный ползунок -->
       <Slider Minimum="50" Maximum="300" Value="{Binding Width}"
-              Orientation="Horizontal" Width="300" Height="50" Margin="300,0,40,10"
+              Orientation="Horizontal" Width="300" Height="50" Margin="0,0,0,0"
               TickFrequency="1" IsSnapToTickEnabled="True"/>
     </StackPanel>
 
-    
+    <!-- Фигура с текстом -->
+    <Canvas Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+      <!-- Эллипс -->
+      <Ellipse Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding EllipseColor}"
+               IsVisible="{Binding IsEllipseVisible}"/>
+
+      <!-- Контейнер для текста -->
+      <Border Width="{Binding Width}" Height="{Binding Height}" VerticalAlignment="Center" HorizontalAlignment="Center"
+              IsVisible="{Binding IsEllipseVisible}" BorderBrush="Transparent" BorderThickness="2">
+        <TextBlock Text="{Binding EllipseText}" Foreground="{Binding EllipseTextColor}"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" />
+      </Border>
+
+      <!-- Прямоугольник -->
+      <Rectangle Width="{Binding Width}" Height="{Binding Height}" Fill="{Binding RectangleColor}"
+                 IsVisible="{Binding IsRectangleVisible}"/>
+
+      <!-- Контейнер для текста -->
+      <Border Width="{Binding Width}" Height="{Binding Height}" VerticalAlignment="Center" HorizontalAlignment="Center"
+              IsVisible="{Binding IsRectangleVisible}" BorderBrush="Transparent" BorderThickness="2">
+        <TextBlock Text="{Binding RectangleText}" Foreground="{Binding RectangleTextColor}"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" />
+      </Border>
+    </Canvas>
   </Grid>
 </UserControl>

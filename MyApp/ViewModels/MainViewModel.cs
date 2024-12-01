@@ -1,75 +1,209 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Avalonia.Media;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 
 namespace MyApp.ViewModels
 {
-    public partial class MainViewModel : ObservableObject
+    public class MainViewModel : INotifyPropertyChanged
     {
-        // Проперти для эллипса и прямоугольника
-        [ObservableProperty]
-        private double width = 150; // Общее свойство для ширины
+        private string _ellipseText = "Текст эллипса";
+        private IBrush _ellipseTextColor = Brushes.Black;
+        private string _rectangleText = "Текст прямоугольника";
+        private IBrush _rectangleTextColor = Brushes.Black;
 
-        [ObservableProperty]
-        private double height = 150; // Общее свойство для высоты
+        private double _width = 150;
+        private double _height = 100;
+        private IBrush _ellipseColor = Brushes.Green; // Начальный цвет эллипса
+        private IBrush _rectangleColor = Brushes.Green; // Начальный цвет прямоугольника
 
-        [ObservableProperty]
-        private IBrush ellipseColor = Brushes.Green;
+        private bool _isEllipseVisible = false;
+        private bool _isRectangleVisible = false;
 
-        [ObservableProperty]
-        private IBrush rectangleColor = Brushes.Green;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        // Видимость фигур
-        [ObservableProperty]
-        private bool isEllipseVisible = true;
-
-        [ObservableProperty]
-        private bool isRectangleVisible = false;
-
-        // Команда для отображения эллипса
-        public ICommand ShowEllipseCommand => new RelayCommand(() =>
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            // Установка значений ширины и высоты для эллипса
-            Width = 150;
-            Height = 150;
-            EllipseColor = Brushes.Green;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
+        public string EllipseText
+        {
+            get => _ellipseText;
+            set
+            {
+                if (_ellipseText != value)
+                {
+                    _ellipseText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IBrush EllipseTextColor
+        {
+            get => _ellipseTextColor;
+            set
+            {
+                if (_ellipseTextColor != value)
+                {
+                    _ellipseTextColor = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string RectangleText
+        {
+            get => _rectangleText;
+            set
+            {
+                if (_rectangleText != value)
+                {
+                    _rectangleText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IBrush RectangleTextColor
+        {
+            get => _rectangleTextColor;
+            set
+            {
+                if (_rectangleTextColor != value)
+                {
+                    _rectangleTextColor = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double Width
+        {
+            get => _width;
+            set
+            {
+                if (_width != value)
+                {
+                    _width = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                if (_height != value)
+                {
+                    _height = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IBrush EllipseColor
+        {
+            get => _ellipseColor;
+            set
+            {
+                if (_ellipseColor != value)
+                {
+                    _ellipseColor = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IBrush RectangleColor
+        {
+            get => _rectangleColor;
+            set
+            {
+                if (_rectangleColor != value)
+                {
+                    _rectangleColor = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool IsEllipseVisible
+        {
+            get => _isEllipseVisible;
+            set
+            {
+                if (_isEllipseVisible != value)
+                {
+                    _isEllipseVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool IsRectangleVisible
+        {
+            get => _isRectangleVisible;
+            set
+            {
+                if (_isRectangleVisible != value)
+                {
+                    _isRectangleVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Команды
+        public ICommand ShowEllipseCommand { get; }
+        public ICommand ShowRectangleCommand { get; }
+        public ICommand ChangeColorCommand { get; }
+
+        public MainViewModel()
+        {
+            ShowEllipseCommand = new RelayCommand<object>(ShowEllipse);
+            ShowRectangleCommand = new RelayCommand<object>(ShowRectangle);
+            ChangeColorCommand = new RelayCommand<object>(ChangeColor);
+        }
+
+        private void ShowEllipse(object parameter)
+        {
             IsEllipseVisible = true;
             IsRectangleVisible = false;
-        });
+            EllipseColor = Brushes.Green;
+            EllipseTextColor = Brushes.White;
+            RectangleColor = Brushes.Transparent;
+        }
 
-        // Команда для отображения прямоугольника
-        public ICommand ShowRectangleCommand => new RelayCommand(() =>
+        private void ShowRectangle(object parameter)
         {
-            // Установка значений ширины и высоты для прямоугольника
-            Width = 150;
-            Height = 150;
-            RectangleColor = Brushes.Green;
-
-            IsEllipseVisible = false;
             IsRectangleVisible = true;
-        });
+            IsEllipseVisible = false;
+            RectangleColor = Brushes.Green; // Цвет для прямоугольника при отображении
+            RectangleTextColor = Brushes.White;
+            EllipseColor = Brushes.Transparent;
+        }
 
-        // Команда для изменения цвета активной фигуры
-        public ICommand ChangeColorCommand => new RelayCommand<string>((color) =>
+        private void ChangeColor(object parameter)
         {
-            var newColor = color switch
+            if (parameter is string color)
             {
-                "Green" => Brushes.Green,
-                "Red" => Brushes.Red,
-                "Blue" => Brushes.Blue,
-                _ => Brushes.Green
-            };
+                IBrush selectedColor = color switch
+                {
+                    "Green" => Brushes.Green,
+                    "Red" => Brushes.Red,
+                    "Blue" => Brushes.Blue,
+                    _ => Brushes.Black
+                };
 
-            if (IsEllipseVisible)
-            {
-                EllipseColor = newColor;
+                EllipseColor = selectedColor;
+                RectangleColor = selectedColor;
             }
-            else if (IsRectangleVisible)
-            {
-                RectangleColor = newColor;
-            }
-        });
+        }
     }
 }
